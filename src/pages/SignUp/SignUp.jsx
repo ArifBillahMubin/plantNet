@@ -3,6 +3,7 @@ import { FcGoogle } from 'react-icons/fc'
 import useAuth from '../../hooks/useAuth'
 import { toast } from 'react-hot-toast'
 import { TbFidgetSpinner } from 'react-icons/tb'
+import { useForm } from 'react-hook-form'
 
 const SignUp = () => {
   const { createUser, updateUserProfile, signInWithGoogle, loading } = useAuth()
@@ -10,32 +11,43 @@ const SignUp = () => {
   const location = useLocation()
   const from = location.state || '/'
 
+
+  // use react hook from 
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm()
+  console.log(errors);
+  const onSubmit = (data) => console.log(data);
+
   // form submit handler
-  const handleSubmit = async event => {
-    event.preventDefault()
-    const form = event.target
-    const name = form.name.value
-    const email = form.email.value
-    const password = form.password.value
+  // const handleSubmit = async event => {
+  //   event.preventDefault()
+  //   const form = event.target
+  //   const name = form.name.value
+  //   const email = form.email.value
+  //   const password = form.password.value
 
-    try {
-      //2. User Registration
-      const result = await createUser(email, password)
+  //   try {
+  //     //2. User Registration
+  //     const result = await createUser(email, password)
 
-      //3. Save username & profile photo
-      await updateUserProfile(
-        name,
-        'https://lh3.googleusercontent.com/a/ACg8ocKUMU3XIX-JSUB80Gj_bYIWfYudpibgdwZE1xqmAGxHASgdvCZZ=s96-c'
-      )
-      console.log(result)
+  //     //3. Save username & profile photo
+  //     await updateUserProfile(
+  //       name,
+  //       'https://lh3.googleusercontent.com/a/ACg8ocKUMU3XIX-JSUB80Gj_bYIWfYudpibgdwZE1xqmAGxHASgdvCZZ=s96-c'
+  //     )
+  //     console.log(result)
 
-      navigate(from, { replace: true })
-      toast.success('Signup Successful')
-    } catch (err) {
-      console.log(err)
-      toast.error(err?.message)
-    }
-  }
+  //     navigate(from, { replace: true })
+  //     toast.success('Signup Successful')
+  //   } catch (err) {
+  //     console.log(err)
+  //     toast.error(err?.message)
+  //   }
+  // }
 
   // Handle Google Signin
   const handleGoogleSignIn = async () => {
@@ -58,7 +70,7 @@ const SignUp = () => {
           <p className='text-sm text-gray-400'>Welcome to PlantNet</p>
         </div>
         <form
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(onSubmit)}
           noValidate=''
           action=''
           className='space-y-6 ng-untouched ng-pristine ng-valid'
@@ -70,12 +82,21 @@ const SignUp = () => {
               </label>
               <input
                 type='text'
-                name='name'
                 id='name'
                 placeholder='Enter Your Name Here'
                 className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-lime-500 bg-gray-200 text-gray-900'
                 data-temp-mail-org='0'
+                {...register("name", {
+                  required: 'name is required.',
+                  maxLength: {
+                    value: 22,
+                    message: 'name is not valid...'
+                  }
+                })}
               />
+              {
+                errors.name && <p className='text-red-500 text-sm font-semibold'>{errors.name.message}</p>
+              }
             </div>
             {/* Image */}
             <div>
@@ -99,11 +120,14 @@ const SignUp = () => {
       bg-gray-100 border border-dashed border-lime-300 rounded-md cursor-pointer
       focus:outline-none focus:ring-2 focus:ring-lime-400 focus:border-lime-400
       py-2'
+                {...register('image')}
               />
               <p className='mt-1 text-xs text-gray-400'>
                 PNG, JPG or JPEG (max 2MB)
               </p>
             </div>
+
+
             <div>
               <label htmlFor='email' className='block mb-2 text-sm'>
                 Email address
@@ -112,12 +136,23 @@ const SignUp = () => {
                 type='email'
                 name='email'
                 id='email'
-                required
                 placeholder='Enter Your Email Here'
                 className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-lime-500 bg-gray-200 text-gray-900'
                 data-temp-mail-org='0'
+                {...register('email', {
+                  required: 'email is required.',
+                  pattern: {
+                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                    message: 'please enter a valid email..'
+                  }
+                })}
               />
+              {
+                errors.email && <p className='text-red-500 text-sm font-semibold'>{errors.email.message}</p>
+              }
             </div>
+
+
             <div>
               <div className='flex justify-between'>
                 <label htmlFor='password' className='text-sm mb-2'>
@@ -129,10 +164,19 @@ const SignUp = () => {
                 name='password'
                 autoComplete='new-password'
                 id='password'
-                required
                 placeholder='*******'
                 className='w-full px-3 py-2 border rounded-md border-gray-300 focus:outline-lime-500 bg-gray-200 text-gray-900'
+                {...register('password', {
+                  required: 'password is required.',
+                  minLength: {
+                    value: 6,
+                    message: 'password must be 6 character.'
+                  }
+                })}
               />
+              {
+                errors.password && <p className='text-red-500 text-sm font-semibold'>{errors.password.message}</p>
+              }
             </div>
           </div>
 
