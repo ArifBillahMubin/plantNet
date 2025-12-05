@@ -3,17 +3,17 @@ import Heading from '../../components/Shared/Heading'
 import Button from '../../components/Shared/Button/Button'
 import PurchaseModal from '../../components/Modal/PurchaseModal'
 import { useState } from 'react'
-import { data, useParams } from 'react-router'
+import { useParams } from 'react-router'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import LoadingSpinner from '../../components/Shared/LoadingSpinner'
 
 const PlantDetails = () => {
   let [isOpen, setIsOpen] = useState(false)
-  const {id} = useParams();
+  const { id } = useParams();
   console.log(id);
 
-  const {data: plant={},isLoading,refetch} = useQuery({
+  const { data: plant = {}, isLoading, refetch } = useQuery({
     queryKey: ['plant', id],
     queryFn: async () => {
       const result = await axios(`${import.meta.env.VITE_API_URL}/plant/${id}`);
@@ -21,7 +21,7 @@ const PlantDetails = () => {
     }
   })
 
-  const {name,image,description,category,price,quantity,seller} = plant || {}
+  const { name, image, description, category, price, quantity, seller } = plant || {}
 
   const closeModal = () => {
     setIsOpen(false)
@@ -103,7 +103,7 @@ const PlantDetails = () => {
           </div>
           <hr className='my-6' />
 
-          <PurchaseModal closeModal={closeModal} isOpen={isOpen} />
+          <PurchaseModal plant={plant} closeModal={closeModal} isOpen={isOpen} />
         </div>
       </div>
     </Container>
