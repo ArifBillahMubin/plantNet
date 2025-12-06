@@ -1,28 +1,27 @@
 import { useState } from 'react'
 import DeleteModal from '../../Modal/DeleteModal'
-const SellerOrderDataRow = () => {
+const SellerOrderDataRow = ({data}) => {
   let [isOpen, setIsOpen] = useState(false)
   const closeModal = () => setIsOpen(false)
+
+  const { name, category, price, quantity,status } = data || {};
 
   return (
     <tr>
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 '>Money Plant</p>
+        <p className='text-gray-900 '>{name}</p>
       </td>
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 '>abc@gmail.com</p>
+        <p className='text-gray-900 '>{category}</p>
       </td>
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 '>$120</p>
+        <p className='text-gray-900 '>${price}</p>
       </td>
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 '>5</p>
+        <p className='text-gray-900 '>{quantity}</p>
       </td>
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 '>Dhaka</p>
-      </td>
-      <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
-        <p className='text-gray-900 '>Pending</p>
+        <p className='text-gray-900 '>{status}</p>
       </td>
 
       <td className='px-5 py-5 border-b border-gray-200 bg-white text-sm'>
@@ -31,6 +30,7 @@ const SellerOrderDataRow = () => {
             required
             className='p-1 border-2 border-lime-300 focus:outline-lime-500 rounded-md text-gray-900  bg-white'
             name='category'
+            defaultValue={status}
           >
             <option value='Pending'>Pending</option>
             <option value='In Progress'>Start Processing</option>
