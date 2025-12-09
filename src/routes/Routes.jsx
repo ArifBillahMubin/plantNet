@@ -15,6 +15,7 @@ import ManageOrders from '../pages/Dashboard/Seller/ManageOrders'
 import MyOrders from '../pages/Dashboard/Customer/MyOrders'
 import { createBrowserRouter } from 'react-router'
 import PaymentSuccess from '../pages/Payment/PaymentSuccess'
+import SellerRequest from '../pages/Dashboard/Admin/SellerRequest'
 
 export const router = createBrowserRouter([
   {
@@ -75,6 +76,14 @@ export const router = createBrowserRouter([
         element: (
           <PrivateRoute>
             <ManageUsers />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: 'seller-request',
+        element: (
+          <PrivateRoute>
+            <SellerRequest></SellerRequest>
           </PrivateRoute>
         ),
       },
