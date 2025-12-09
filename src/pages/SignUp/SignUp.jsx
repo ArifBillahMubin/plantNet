@@ -5,7 +5,7 @@ import { toast } from 'react-hot-toast'
 import { TbFidgetSpinner } from 'react-icons/tb'
 import { useForm } from 'react-hook-form'
 // import axios from 'axios'
-import { imageUpload } from '../../../utils'
+import { imageUpload, saveOrUpdateUser } from '../../../utils'
 
 const SignUp = () => {
   const { createUser, updateUserProfile, signInWithGoogle, loading } = useAuth()
@@ -39,6 +39,9 @@ const SignUp = () => {
 
       //2. User Registration
       const result = await createUser(email, password)
+
+      //save in db user data
+      await saveOrUpdateUser({ name, email, imageURL })
 
       //3. Save username & profile photo
       await updateUserProfile(
@@ -87,7 +90,10 @@ const SignUp = () => {
   const handleGoogleSignIn = async () => {
     try {
       //User Registration using google
-      await signInWithGoogle()
+      const { user } = await signInWithGoogle()
+
+      //save in db user data
+      await saveOrUpdateUser({ name:user?.displayName, email:user?.email, imageURL:user?.photoURL })
 
       navigate(from, { replace: true })
       toast.success('Signup Successful')
@@ -96,6 +102,7 @@ const SignUp = () => {
       toast.error(err?.message)
     }
   }
+
   return (
     <div className='flex justify-center items-center min-h-screen bg-white'>
       <div className='flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900'>
